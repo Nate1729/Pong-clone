@@ -72,6 +72,23 @@ int main()
     PADDLE_WIDTH,
     PADDLE_HEIGHT
   };
+  
+  /* Making the centerline */
+  unsigned line_partition_height = 20;
+  unsigned line_partition_width = 6;
+  unsigned count = ((unsigned) SCREEN_HEIGHT) / (line_partition_height*2);
+  
+  SDL_Rect *centerline_rects = malloc(count * sizeof(SDL_Rect));
+
+  unsigned i;
+  for(i=0; i<count; i++)
+  {
+    centerline_rects[i].x = (SCREEN_WIDTH - line_partition_width)/2;
+    centerline_rects[i].y = SCREEN_HEIGHT - (line_partition_height * 2 * i);
+    centerline_rects[i].w = line_partition_width;
+    centerline_rects[i].h = line_partition_height; 
+  }
+  
 
   int quit = 0;
   SDL_Event e;
@@ -87,8 +104,11 @@ int main()
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderFillRect(renderer, &leftPaddle);
     SDL_RenderFillRect(renderer, &rightPaddle);
+    SDL_RenderFillRects(renderer, centerline_rects, count);
     SDL_RenderPresent(renderer);
   }
+  
+  free(centerline_rects);
 
   TTF_CloseFont(font);
   SDL_DestroyTexture(textTexture);
