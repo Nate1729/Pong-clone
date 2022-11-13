@@ -8,6 +8,8 @@
 /* Constants */
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
+#define PADDLE_HEIGHT 60
+#define PADDLE_WIDTH 10
 
 void init(SDL_Window **window, SDL_Renderer **renderer)
 {
@@ -57,6 +59,19 @@ int main()
 
   textTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
+  /* Creating game objects */
+  SDL_Rect leftPaddle = {
+    0,
+    (SCREEN_HEIGHT - PADDLE_HEIGHT)/2,
+    PADDLE_WIDTH,
+    PADDLE_HEIGHT
+  }; 
+  SDL_Rect rightPaddle = {
+    SCREEN_WIDTH - PADDLE_WIDTH,
+    (SCREEN_HEIGHT - PADDLE_HEIGHT)/2,
+    PADDLE_WIDTH,
+    PADDLE_HEIGHT
+  };
 
   int quit = 0;
   SDL_Event e;
@@ -68,7 +83,10 @@ int main()
           break;
       }
     }
-    SDL_RenderCopy(renderer, textTexture, NULL, NULL);
+    /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderFillRect(renderer, &leftPaddle);
+    SDL_RenderFillRect(renderer, &rightPaddle);
     SDL_RenderPresent(renderer);
   }
 
