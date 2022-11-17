@@ -1,7 +1,16 @@
-COMPILER = gcc
-SRC = main.c
+CC = gcc
 LINKER_FLAGS = -lSDL2 -lSDL2_ttf
-COMPILER_OPTS = -std=c89
+CFLAGS = -std=c89
+OBJECTS = paddle.o constants.o main.o
 
-Pong: main.c
-	$(COMPILER) $(SRC) $(LINKER_FLAGS) $(COMPILER_OPTS) -o pong
+Pong: $(OBJECTS)
+	$(CC) $(OBJECTS) $(LINKER_FLAGS) $(CFLAGS) -o pong
+
+main.o: paddle.o constants.o main.c
+	$(CC) $(CFLAGS) -c paddle.o constants.o main.c
+
+paddle.o: paddle.c constants.o
+constants.o: constants.c
+
+clean:
+	rm *.o
