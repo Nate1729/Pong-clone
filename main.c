@@ -5,11 +5,9 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
 
-/* Constants */
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
-#define PADDLE_HEIGHT 60
-#define PADDLE_WIDTH 10
+/* Local Imports */
+#include "paddle.h" 
+#include "constants.h"
 
 void init(SDL_Window **window, SDL_Renderer **renderer)
 {
@@ -60,19 +58,9 @@ int main()
   textTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
   /* Creating game objects */
-  SDL_Rect leftPaddle = {
-    0,
-    (SCREEN_HEIGHT - PADDLE_HEIGHT)/2,
-    PADDLE_WIDTH,
-    PADDLE_HEIGHT
-  }; 
-  SDL_Rect rightPaddle = {
-    SCREEN_WIDTH - PADDLE_WIDTH,
-    (SCREEN_HEIGHT - PADDLE_HEIGHT)/2,
-    PADDLE_WIDTH,
-    PADDLE_HEIGHT
-  };
-  
+  Paddle leftPaddle = create_paddle(LEFT_PADDLE);
+  Paddle rightPaddle =  create_paddle(RIGHT_PADDLE); 
+
   /* Making the centerline */
   unsigned line_partition_height = 20;
   unsigned line_partition_width = 6;
