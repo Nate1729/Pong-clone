@@ -1,7 +1,17 @@
-COMPILER = gcc
+CC = gcc
 SRC = main.c
 LINKER_FLAGS = -lSDL2 -lSDL2_ttf
-COMPILER_OPTS = -std=c89
+INCDIRS = -Iinclude
+CFLAGS = -std=c89 $(INCDIRS) $(LINKER_FLAGS)
 
-Pong: main.c
-	$(COMPILER) $(SRC) $(LINKER_FLAGS) $(COMPILER_OPTS) -o pong
+CFILES=$(wilcard src/*.c)
+OBJS=main.o constants.o paddle.o
+
+BINARY=pong
+
+all: $(BINARY)
+
+$(BINARY): $(OBJS)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+%.o:src/%.c
