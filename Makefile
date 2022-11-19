@@ -1,16 +1,25 @@
 CC = gcc
+
+# Directories
+SRCDIR = ./src
+OBJDIR = ./obj
+
+# Compiler Options
 LINKER_FLAGS = -lSDL2 -lSDL2_ttf
-CFLAGS = -std=c89
-OBJECTS = paddle.o constants.o main.o
+INCDIRS = -Iinclude
+CFLAGS = -std=c89 $(INCDIRS) $(LINKER_FLAGS)
 
-Pong: $(OBJECTS)
-	$(CC) $(OBJECTS) $(LINKER_FLAGS) $(CFLAGS) -o pong
+# Files
+CFILES=$(addprefix $(SRCDIR)/,main.c constants.c paddle.c)
+OBJS=constants.o paddle.o main.o
 
-main.o: paddle.o constants.o main.c
-	$(CC) $(CFLAGS) -c paddle.o constants.o main.c
+all: pong
 
-paddle.o: paddle.c constants.o
-constants.o: constants.c
+pong: $(OBJS)
+	$(CC) -o pong $(CFLAGS) $^
+
+%.o:%.c
+	$(CC) -c -o $@ $^ $(CFLAGS)
 
 clean:
 	rm *.o
