@@ -2,6 +2,7 @@ CC = gcc
 
 # Directories
 SRCDIR = ./src
+VPATH = $(SRCDIR)
 OBJDIR = ./obj
 
 # Compiler Options
@@ -15,11 +16,12 @@ OBJS=constants.o paddle.o main.o
 
 all: pong
 
-pong: $(OBJS)
-	$(CC) -o pong $(CFLAGS) $^
-
 %.o:%.c
 	$(CC) -c -o $@ $^ $(CFLAGS)
 
-clean:
+pong: $(OBJS)
+	$(CC) -o pong $(CFLAGS) $^
+
+clean:	
 	rm *.o
+
