@@ -9,28 +9,59 @@
 
 const int PADDLE_HEIGHT = 60;
 const int PADDLE_WIDTH = 10;
+const int PADDLE_SPEED = 1;
 
-Paddle create_paddle(PaddleLocation_t loc)
+Paddle paddle_create(PaddleLocation_t loc)
 {
   Paddle paddle;
-  if (loc == LEFT_PADDLE)
+  if (loc == RIGHT_PADDLE)
   { 
-    paddle.x = SCREEN_WIDTH - PADDLE_WIDTH;
-    paddle.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
-    paddle.w = PADDLE_WIDTH;
-    paddle.h = PADDLE_HEIGHT;
+    paddle.rect.x = SCREEN_WIDTH - PADDLE_WIDTH;
+    paddle.rect.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
+    paddle.rect.w = PADDLE_WIDTH;
+    paddle.rect.h = PADDLE_HEIGHT;
 
     return paddle;
-  } else if (loc == RIGHT_PADDLE)
+  } else if (loc == LEFT_PADDLE)
   {
-    paddle.x = 0;
-    paddle.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
-    paddle.w = PADDLE_WIDTH;
-    paddle.h = PADDLE_HEIGHT;
+    paddle.rect.x = 0;
+    paddle.rect.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
+    paddle.rect.w = PADDLE_WIDTH;
+    paddle.rect.h = PADDLE_HEIGHT;
 
     return paddle;
   }
 
   perror("Error creating paddle!");
   return paddle;
+}
+
+void paddle_direction_update(Paddle *paddle, PaddleMoveDirection_t dir)
+{
+  paddle->move_dir = dir;
+}
+
+void paddle_move(Paddle *paddle)
+{
+  if (paddle->move_dir == PADDLE_STAY)
+  {
+    return;
+  }
+
+  if (paddle->move_dir == PADDLE_MOVE_UP && paddle->rect.y - PADDLE_SPEED > 0)
+  {
+    paddle->rect.y -= PADDLE_SPEED;
+    return;
+  }
+
+  if (paddle->move_dir == PADDLE_MOVE_DOWN &&
+      paddle->rect.y + paddle->rect.h + PADDLE_SPEED < SCREEN_HEIGHT)
+  {
+    paddle->rect.y += PADDLE_SPEED;
+  }
+}
+
+int paddle_render(Paddle *paddle, SDL_Renderer *renderer)
+{
+  return SDL_RenderFillRect(renderer, &paddle->rect);
 }
