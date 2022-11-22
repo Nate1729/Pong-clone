@@ -58,8 +58,8 @@ int main()
   textTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
   /* Creating game objects */
-  Paddle leftPaddle = create_paddle(LEFT_PADDLE);
-  Paddle rightPaddle =  create_paddle(RIGHT_PADDLE); 
+  Paddle leftPaddle = paddle_create(LEFT_PADDLE);
+  Paddle rightPaddle =  paddle_create(RIGHT_PADDLE);
 
   /* Making the centerline */
   unsigned line_partition_height = 20;
@@ -79,6 +79,7 @@ int main()
   
 
   int quit = 0;
+  int keycode;
   SDL_Event e;
   while(!quit) {
     while(SDL_PollEvent(&e)) {
@@ -86,12 +87,52 @@ int main()
         case SDL_QUIT:
           quit = 1;
           break;
+        case SDL_KEYDOWN:
+          switch (e.key.keysym.sym) {
+            case SDLK_w:
+              paddle_direction_update(&leftPaddle, PADDLE_MOVE_UP);
+              break;
+            case SDLK_s:
+              paddle_direction_update(&leftPaddle, PADDLE_MOVE_DOWN);
+              break;
+            case SDLK_UP:
+              paddle_direction_update(&rightPaddle, PADDLE_MOVE_UP);
+              break;
+            case SDLK_DOWN: 
+              paddle_direction_update(&rightPaddle, PADDLE_MOVE_DOWN);
+              break;
+          }
+          break;
+        case SDL_KEYUP:
+          switch (e.key.keysym.sym) {
+            case SDLK_w:
+              paddle_direction_update(&leftPaddle, PADDLE_STAY);
+              break;
+            case SDLK_s:
+              paddle_direction_update(&leftPaddle, PADDLE_STAY);
+              break;
+            case SDLK_UP:
+              paddle_direction_update(&rightPaddle, PADDLE_STAY);
+              break;
+            case SDLK_DOWN:
+              paddle_direction_update(&rightPaddle, PADDLE_STAY);
+              break;
+          }
+          break;
       }
     }
+    paddle_move(&leftPaddle);
+    paddle_move(&rightPaddle);
     /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
+
+    /* Clear the screen */
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+    SDL_RenderClear(renderer);
+
+    /* Render game objects */
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderFillRect(renderer, &leftPaddle);
-    SDL_RenderFillRect(renderer, &rightPaddle);
+    paddle_render(&leftPaddle, renderer);
+    paddle_render(&rightPaddle, renderer);
     SDL_RenderFillRects(renderer, centerline_rects, count);
     SDL_RenderPresent(renderer);
   }
