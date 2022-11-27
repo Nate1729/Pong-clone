@@ -12,7 +12,7 @@ CFLAGS = -std=c89 $(INCDIRS) $(LINKER_FLAGS)
 
 # Files
 CFILES=$(addprefix $(SRCDIR)/,main.c constants.c paddle.c)
-OBJS=constants.o paddle.o main.o
+OBJS=constants.o paddle.o main.o ball.o
 
 all: pong
 

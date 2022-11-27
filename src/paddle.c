@@ -9,7 +9,7 @@
 
 const int PADDLE_HEIGHT = 60;
 const int PADDLE_WIDTH = 10;
-const int PADDLE_SPEED = 1;
+const int PADDLE_SPEED = 8;
 
 Paddle paddle_create(PaddleLocation_t loc)
 {

@@ -3,11 +3,14 @@
 
 /* 3rd party library */
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_timer.h"
 #include "SDL2/SDL_ttf.h"
 
 /* Local Imports */
 #include "paddle.h" 
+#include "ball.h"
 #include "constants.h"
+#include "types.h"
 
 void init(SDL_Window **window, SDL_Renderer **renderer)
 {
@@ -60,6 +63,7 @@ int main()
   /* Creating game objects */
   Paddle leftPaddle = paddle_create(LEFT_PADDLE);
   Paddle rightPaddle =  paddle_create(RIGHT_PADDLE);
+  Ball ball = ball_create();
 
   /* Making the centerline */
   unsigned line_partition_height = 20;
@@ -77,6 +81,9 @@ int main()
     centerline_rects[i].h = line_partition_height; 
   }
   
+  /* Setting up frame rate */
+  u64 frame_length = (1000 / (u64)FRAME_RATE);
+  u64 timer = SDL_GetTicks64();
 
   int quit = 0;
   int keycode;
@@ -121,20 +128,29 @@ int main()
           break;
       }
     }
-    paddle_move(&leftPaddle);
-    paddle_move(&rightPaddle);
-    /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
 
-    /* Clear the screen */
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-    SDL_RenderClear(renderer);
+    if (SDL_GetTicks64() - timer > frame_length)
+    {
+      timer = SDL_GetTicks64();
 
-    /* Render game objects */
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    paddle_render(&leftPaddle, renderer);
-    paddle_render(&rightPaddle, renderer);
-    SDL_RenderFillRects(renderer, centerline_rects, count);
-    SDL_RenderPresent(renderer);
+      /* Update game object positions */
+      paddle_move(&leftPaddle);
+      paddle_move(&rightPaddle);
+      ball_update_position(&ball);
+      /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
+
+      /* Clear the screen */
+      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+      SDL_RenderClear(renderer);
+
+      /* Render game objects */
+      SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+      paddle_render(&leftPaddle, renderer);
+      paddle_render(&rightPaddle, renderer);
+      ball_render(renderer, &ball);
+      /*SDL_RenderFillRects(renderer, centerline_rects, count);*/
+      SDL_RenderPresent(renderer);
+    }
   }
   
   free(centerline_rects);
