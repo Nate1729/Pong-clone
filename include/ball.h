@@ -27,6 +27,7 @@ typedef struct{
 Ball ball_create();
 
 void ball_update_position(Ball *ball);
+void ball_reset(Ball *ball);
 int ball_render(SDL_Renderer *renderer, Ball *ball);
 
 #endif

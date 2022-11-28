@@ -24,6 +24,7 @@ typedef enum PaddleMoveDirection {
 extern const int PADDLE_WIDTH;
 extern const int PADDLE_HEIGHT;
 extern const int PADDLE_SPEED;
+extern const int PADDLE_PADDING;
 
 /* Functions */
 Paddle paddle_create(PaddleLocation_t loc);
