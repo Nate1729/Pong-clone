@@ -1,5 +1,6 @@
 /* Standard library */
 #include <stdio.h>
+#include <stdlib.h>
 
 /* 3rd party library */
 #include "SDL2/SDL.h"
@@ -41,6 +42,32 @@ void init(SDL_Window **window, SDL_Renderer **renderer)
   {
     printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
     exit(-1);
+  }
+}
+
+void check_paddle_ball_collision(Ball *ball, Paddle *left_paddle, Paddle *right_paddle)
+{
+  int margin = abs(ball->vel.x_vel/2);
+
+  if (ball->rect.y + ball->rect.h > left_paddle->rect.y &&
+      ball->rect.y < left_paddle->rect.y + left_paddle->rect.h)
+  {
+    /* Ball-Paddle vertical positions are aligned for possible collisions */
+    if (ball->rect.x > left_paddle->rect.x + left_paddle->rect.w - margin &&
+        ball->rect.x < left_paddle->rect.x + left_paddle->rect.w + margin)
+    {
+      ball->vel.x_vel *= -1;
+    }
+  }
+  else if (ball->rect.y + ball->rect.h > right_paddle->rect.y &&
+      ball->rect.y < right_paddle->rect.y + right_paddle->rect.h)
+  {
+    /* Ball and right paddle are vertically aligned for a collision */
+    if (ball->rect.x + ball->rect.w < right_paddle->rect.x + margin &&
+        ball->rect.x + ball->rect.w > right_paddle->rect.x - margin)
+    {
+      ball->vel.x_vel *= -1;
+    }
   }
 }
 
@@ -136,6 +163,7 @@ int main()
       /* Update game object positions */
       paddle_move(&leftPaddle);
       paddle_move(&rightPaddle);
+      check_paddle_ball_collision(&ball, &leftPaddle, &rightPaddle);
       ball_update_position(&ball);
       /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
 

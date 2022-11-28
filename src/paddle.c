@@ -10,13 +10,14 @@
 const int PADDLE_HEIGHT = 60;
 const int PADDLE_WIDTH = 10;
 const int PADDLE_SPEED = 8;
+const int PADDLE_PADDING = 20;
 
 Paddle paddle_create(PaddleLocation_t loc)
 {
   Paddle paddle;
   if (loc == RIGHT_PADDLE)
   { 
-    paddle.rect.x = SCREEN_WIDTH - PADDLE_WIDTH;
+    paddle.rect.x = SCREEN_WIDTH - (PADDLE_WIDTH + PADDLE_PADDING);
     paddle.rect.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
     paddle.rect.w = PADDLE_WIDTH;
     paddle.rect.h = PADDLE_HEIGHT;
@@ -24,7 +25,7 @@ Paddle paddle_create(PaddleLocation_t loc)
     return paddle;
   } else if (loc == LEFT_PADDLE)
   {
-    paddle.rect.x = 0;
+    paddle.rect.x = PADDLE_PADDING;
     paddle.rect.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
     paddle.rect.w = PADDLE_WIDTH;
     paddle.rect.h = PADDLE_HEIGHT;

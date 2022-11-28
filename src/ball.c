@@ -16,7 +16,7 @@ Ball ball_create()
     .y=0
   };
 
-  Velocity initial_ball_velocity = {.x_vel=8, .y_vel=5};
+  Velocity initial_ball_velocity = {.x_vel=10, .y_vel=5};
 
   return (Ball) {
     .rect=rect,
@@ -34,13 +34,13 @@ void ball_update_position(Ball *ball)
 
   if (edge_left + ball->vel.x_vel < 0)
   {
-    printf("Collision with LEFT edge of screen!\n");
-    ball->vel.x_vel *= -1;
+    printf("Right Player Scored!\n");
+    ball_reset(ball);
   }
   if (edge_right + ball->vel.x_vel > SCREEN_WIDTH)
   {
-    printf("Collision with RIGHT edge of screen!\n");
-    ball->vel.x_vel *= -1;
+    printf("Left Player Scored!\n");
+    ball_reset(ball);
   }
   if (edge_top + ball->vel.y_vel < 0)
   {
@@ -56,6 +56,12 @@ void ball_update_position(Ball *ball)
   /* Updating the ball position */
   ball->rect.x += ball->vel.x_vel;
   ball->rect.y += ball->vel.y_vel;
+}
+
+void ball_reset(Ball *ball)
+{
+  Ball new_ball = ball_create();
+  memcpy(ball, &new_ball, sizeof(Ball));
 }
 
 int ball_render(SDL_Renderer *renderer, Ball *ball)
