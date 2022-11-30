@@ -32,6 +32,12 @@ Paddle paddle_create(PaddleLocation_t loc);
 void paddle_direction_update(Paddle *paddle, PaddleMoveDirection_t dir);
 void paddle_move(Paddle *paddle);
 
+/* Paddle edget Getters */
+int paddle_left_edge(Paddle *paddle);
+int paddle_right_edge(Paddle *paddle);
+int paddle_top_edge(Paddle *paddle);
+int paddle_bottom_edge(Paddle *paddle);
+
 /* Wrapper around `SDL_RenderDrawRect`.
  * The return value is just the result from
  * `SDL_RenderDrawRect */
