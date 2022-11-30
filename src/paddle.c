@@ -66,3 +66,23 @@ int paddle_render(Paddle *paddle, SDL_Renderer *renderer)
 {
   return SDL_RenderFillRect(renderer, &paddle->rect);
 }
+
+int paddle_left_edge(Paddle *paddle)
+{
+  return paddle->rect.x;
+}
+
+int paddle_right_edge(Paddle *paddle)
+{
+  return paddle->rect.x + paddle->rect.w;
+}
+
+int paddle_top_edge(Paddle *paddle)
+{
+  return paddle->rect.y;
+}
+
+int paddle_bottom_edge(Paddle *paddle)
+{
+  return paddle->rect.y + paddle->rect.h;
+}

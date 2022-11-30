@@ -16,7 +16,7 @@ Ball ball_create()
     .y=0
   };
 
-  Velocity initial_ball_velocity = {.x_vel=10, .y_vel=5};
+  Velocity initial_ball_velocity = {.x_vel=-8, .y_vel=5};
 
   return (Ball) {
     .rect=rect,
@@ -70,4 +70,30 @@ int ball_render(SDL_Renderer *renderer, Ball *ball)
   render_result = SDL_RenderFillRect(renderer, &ball->rect);
 
   return render_result;
+}
+
+/* Geometry Functions */
+int ball_left_edge(Ball *ball)
+{
+  return ball->rect.x;
+}
+
+int ball_right_edge(Ball *ball)
+{
+  return ball->rect.x + ball->rect.w;
+}
+
+int ball_top_edge(Ball *ball)
+{
+  return ball->rect.y;
+}
+
+int ball_bottom_edge(Ball *ball)
+{
+  return ball->rect.y + ball->rect.h;
+}
+
+void ball_print(Ball *ball)
+{
+  printf("Ball-right-edge: %d, Ball velocity: %d\n", ball_right_edge(ball), ball->vel.x_vel);
 }

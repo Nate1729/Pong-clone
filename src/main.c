@@ -47,27 +47,23 @@ void init(SDL_Window **window, SDL_Renderer **renderer)
 
 void check_paddle_ball_collision(Ball *ball, Paddle *left_paddle, Paddle *right_paddle)
 {
-  int margin = abs(ball->vel.x_vel/2);
-
-  if (ball->rect.y + ball->rect.h > left_paddle->rect.y &&
-      ball->rect.y < left_paddle->rect.y + left_paddle->rect.h)
+  if (ball_left_edge(ball) > paddle_right_edge(left_paddle)
+      && ball_left_edge(ball) + ball->vel.x_vel < paddle_right_edge(left_paddle))
   {
-    /* Ball-Paddle vertical positions are aligned for possible collisions */
-    if (ball->rect.x > left_paddle->rect.x + left_paddle->rect.w - margin &&
-        ball->rect.x < left_paddle->rect.x + left_paddle->rect.w + margin)
+    if (ball_bottom_edge(ball) >= paddle_top_edge(left_paddle) &&
+        ball_top_edge(ball) <= paddle_bottom_edge(left_paddle))
     {
-      ball->vel.x_vel *= -1;
+      ball->vel.x_vel = -ball->vel.x_vel;
     }
-  }
-  else if (ball->rect.y + ball->rect.h > right_paddle->rect.y &&
-      ball->rect.y < right_paddle->rect.y + right_paddle->rect.h)
+  } else if (
+      ball_right_edge(ball) < paddle_right_edge(right_paddle) &&
+      ball_right_edge(ball) + ball->vel.x_vel > paddle_left_edge(right_paddle))
   {
-    /* Ball and right paddle are vertically aligned for a collision */
-    if (ball->rect.x + ball->rect.w < right_paddle->rect.x + margin &&
-        ball->rect.x + ball->rect.w > right_paddle->rect.x - margin)
+    if (ball_bottom_edge(ball) >= paddle_top_edge(right_paddle) &&
+        ball_top_edge(ball) <= paddle_bottom_edge(right_paddle))
     {
-      ball->vel.x_vel *= -1;
-    }
+      ball->vel.x_vel = -ball->vel.x_vel;
+    }    
   }
 }
 
@@ -176,7 +172,7 @@ int main()
       paddle_render(&leftPaddle, renderer);
       paddle_render(&rightPaddle, renderer);
       ball_render(renderer, &ball);
-      /*SDL_RenderFillRects(renderer, centerline_rects, count);*/
+      SDL_RenderFillRects(renderer, centerline_rects, count);
       SDL_RenderPresent(renderer);
     }
   }

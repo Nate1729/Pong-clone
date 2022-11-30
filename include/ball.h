@@ -30,4 +30,10 @@ void ball_update_position(Ball *ball);
 void ball_reset(Ball *ball);
 int ball_render(SDL_Renderer *renderer, Ball *ball);
 
+int ball_left_edge(Ball *ball);
+int ball_right_edge(Ball *ball);
+int ball_top_edge(Ball *ball);
+int ball_bottom_edge(Ball *ball);
+
+void ball_print(Ball *ball);
 #endif
