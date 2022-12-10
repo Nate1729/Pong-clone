@@ -11,6 +11,7 @@
 #include "paddle.h" 
 #include "ball.h"
 #include "constants.h"
+#include "centerline.h"
 #include "types.h"
 
 void init(SDL_Window **window, SDL_Renderer **renderer)
@@ -88,21 +89,7 @@ int main()
   Paddle rightPaddle =  paddle_create(RIGHT_PADDLE);
   Ball ball = ball_create();
 
-  /* Making the centerline */
-  unsigned line_partition_height = 20;
-  unsigned line_partition_width = 6;
-  unsigned count = ((unsigned) SCREEN_HEIGHT) / (line_partition_height*2);
-  
-  SDL_Rect *centerline_rects = malloc(count * sizeof(SDL_Rect));
-
-  unsigned i;
-  for(i=0; i<count; i++)
-  {
-    centerline_rects[i].x = (SCREEN_WIDTH - line_partition_width)/2;
-    centerline_rects[i].y = SCREEN_HEIGHT - (line_partition_height * 2 * i);
-    centerline_rects[i].w = line_partition_width;
-    centerline_rects[i].h = line_partition_height; 
-  }
+  Centerline centerline = centerline_create();
   
   /* Setting up frame rate */
   u64 frame_length = (1000 / (u64)FRAME_RATE);
@@ -172,12 +159,12 @@ int main()
       paddle_render(&leftPaddle, renderer);
       paddle_render(&rightPaddle, renderer);
       ball_render(renderer, &ball);
-      SDL_RenderFillRects(renderer, centerline_rects, count);
+      SDL_RenderFillRects(renderer, centerline.rects, centerline.count);
       SDL_RenderPresent(renderer);
     }
   }
   
-  free(centerline_rects);
+  centerline_destroy(&centerline);
 
   TTF_CloseFont(font);
   SDL_DestroyTexture(textTexture);
