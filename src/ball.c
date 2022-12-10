@@ -44,12 +44,10 @@ void ball_update_position(Ball *ball)
   }
   if (edge_top + ball->vel.y_vel < 0)
   {
-    printf("Collision with TOP edge of screen!\n");
     ball->vel.y_vel *= -1;
   }
   if (edge_bottom + ball->vel.y_vel > SCREEN_HEIGHT)
   {
-    printf("Collision with BOTTOM edge of screen!\n");
     ball->vel.y_vel *= -1;
   }
 
@@ -64,7 +62,7 @@ void ball_reset(Ball *ball)
   memcpy(ball, &new_ball, sizeof(Ball));
 }
 
-int ball_render(SDL_Renderer *renderer, Ball *ball)
+int ball_render(Ball *ball, SDL_Renderer *renderer)
 {
   int render_result;
   render_result = SDL_RenderFillRect(renderer, &ball->rect);

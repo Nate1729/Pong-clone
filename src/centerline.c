@@ -33,3 +33,8 @@ void centerline_destroy(Centerline *centerline)
 {
   free(centerline->rects);
 }
+
+int centerline_render(Centerline *centerline, SDL_Renderer *renderer)
+{
+  return SDL_RenderFillRects(renderer, centerline->rects, centerline->count); 
+}

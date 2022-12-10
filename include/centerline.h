@@ -15,4 +15,5 @@ typedef struct {
 Centerline centerline_create();
 void centerline_destroy(Centerline *centerline);
 
+int centerline_render(Centerline *centerline, SDL_Renderer *renderer);
 #endif

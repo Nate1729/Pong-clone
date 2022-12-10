@@ -13,7 +13,10 @@ typedef struct {
 }GameState;
 
 
-void game_state_initialize();
-void game_state_destroy();
+
+GameState game_state_initialize();
+void game_state_destroy(GameState *state);
+
+int game_state_render(GameState *state, SDL_Renderer *renderer);
 
 #endif
