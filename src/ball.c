@@ -60,7 +60,7 @@ void ball_reset(Ball *ball)
   memcpy(ball, &new_ball, sizeof(Ball));
 }
 
-int ball_render(SDL_Renderer *renderer, Ball *ball)
+int ball_render(Ball *ball, SDL_Renderer *renderer)
 {
   int render_result;
   render_result = SDL_RenderFillRect(renderer, &ball->rect);

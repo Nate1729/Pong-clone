@@ -28,7 +28,7 @@ Ball ball_create();
 
 void ball_update_position(Ball *ball);
 void ball_reset(Ball *ball);
-int ball_render(SDL_Renderer *renderer, Ball *ball);
+int ball_render(Ball *ball, SDL_Renderer *renderer);
 
 int ball_left_edge(Ball *ball);
 int ball_right_edge(Ball *ball);
