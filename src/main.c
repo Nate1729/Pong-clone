@@ -67,6 +67,40 @@ void check_paddle_ball_collision(Ball *ball, Paddle *left_paddle, Paddle *right_
   }
 }
 
+SDL_Texture** initialize_font_surfaces(int max_score, TTF_Font *font, SDL_Renderer *renderer)
+{
+  if (max_score < 1)
+  {
+    return NULL;
+  }
+
+  /* Initalizing array */
+  SDL_Color number_color = {0xFF, 0xFF, 0xFF};
+  SDL_Texture **texture_array = (SDL_Texture **) malloc(sizeof(SDL_Texture *) * max_score);
+  
+  int i;
+  SDL_Surface *temp_surface;
+  for (i=0; i< max_score; i++)
+  {
+    temp_surface = TTF_RenderText_Solid(font, (char)(i+48), number_color);
+    texture_array[i] = SDL_CreateTextureFromSurface(renderer, temp_surface);
+
+    free(temp_surface);
+    temp_surface = NULL;
+
+    if (texture_array[i] == NULL)
+    {
+      free(texture_array);
+
+      printf("Error creating textures! SDL Error: %s\n", SDL_GetError());
+
+      return NULL;
+    }
+  }
+
+  return texture_array;
+}
+
 int main()
 {  
   SDL_Window *window = NULL;
@@ -77,11 +111,17 @@ int main()
 
   /* Setting up TTF */
   TTF_Init();
-  TTF_Font *font = TTF_OpenFont("Yagora.ttf", 10);
+  TTF_Font *font = TTF_OpenFont("fonts/8-bit-font.ttf", 30);
+  if (font == NULL)
+  {
+    printf("Error opening font!\n");
+    exit(EXIT_FAILURE);
+  }
   SDL_Color color = { 255, 255, 255 };
-  SDL_Surface *surface = TTF_RenderText_Solid(font, "Welcome to Pong", color);
+  SDL_Texture **scoreboard_texture_array = initialize_font_surfaces(10, font, renderer);
 
   textTexture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_Rect textureRect = {.w=surface->w, .h=surface->h, .x=SCREEN_WIDTH/2-70, .y=20};
 
   /* Creating game objects */
   Paddle leftPaddle = paddle_create(LEFT_PADDLE);
@@ -161,11 +201,12 @@ int main()
       paddle_move(&rightPaddle);
       check_paddle_ball_collision(&ball, &leftPaddle, &rightPaddle);
       ball_update_position(&ball);
-      /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
 
       /* Clear the screen */
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
       SDL_RenderClear(renderer);
+
+      SDL_RenderCopy(renderer, textTexture, NULL, &textureRect);
 
       /* Render game objects */
       SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);

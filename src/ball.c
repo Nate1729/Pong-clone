@@ -34,22 +34,18 @@ void ball_update_position(Ball *ball)
 
   if (edge_left + ball->vel.x_vel < 0)
   {
-    printf("Right Player Scored!\n");
     ball_reset(ball);
   }
   if (edge_right + ball->vel.x_vel > SCREEN_WIDTH)
   {
-    printf("Left Player Scored!\n");
     ball_reset(ball);
   }
   if (edge_top + ball->vel.y_vel < 0)
   {
-    printf("Collision with TOP edge of screen!\n");
     ball->vel.y_vel *= -1;
   }
   if (edge_bottom + ball->vel.y_vel > SCREEN_HEIGHT)
   {
-    printf("Collision with BOTTOM edge of screen!\n");
     ball->vel.y_vel *= -1;
   }
 
