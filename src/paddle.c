@@ -21,14 +21,17 @@ Paddle paddle_create(PaddleLocation_t loc)
     paddle.rect.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
     paddle.rect.w = PADDLE_WIDTH;
     paddle.rect.h = PADDLE_HEIGHT;
+    paddle.move_dir = PADDLE_STAY;
 
     return paddle;
+
   } else if (loc == LEFT_PADDLE)
   {
     paddle.rect.x = PADDLE_PADDING;
     paddle.rect.y = (SCREEN_HEIGHT - PADDLE_HEIGHT) / 2;
     paddle.rect.w = PADDLE_WIDTH;
     paddle.rect.h = PADDLE_HEIGHT;
+    paddle.move_dir = PADDLE_STAY;
 
     return paddle;
   }

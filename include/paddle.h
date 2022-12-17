@@ -4,11 +4,6 @@
 #include <SDL2/SDL.h>
 
 /* Types */
-typedef struct {
-  SDL_Rect rect;
-  int move_dir;
-}Paddle;
-
 typedef enum PaddleLocation {
   LEFT_PADDLE,
   RIGHT_PADDLE
@@ -19,6 +14,11 @@ typedef enum PaddleMoveDirection {
   PADDLE_STAY,
   PADDLE_MOVE_DOWN
 } PaddleMoveDirection_t;
+
+typedef struct {
+  SDL_Rect rect;
+  PaddleMoveDirection_t move_dir;
+}Paddle;
 
 /* Constants */
 extern const int PADDLE_WIDTH;

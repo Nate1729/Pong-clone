@@ -24,7 +24,7 @@ Ball ball_create()
   };
 }
 
-void ball_update_position(Ball *ball)
+PlayerScored ball_update_position(Ball *ball)
 {
   /* Collision Detection */
   int edge_left = ball->rect.x;
@@ -34,13 +34,13 @@ void ball_update_position(Ball *ball)
 
   if (edge_left + ball->vel.x_vel < 0)
   {
-    printf("Right Player Scored!\n");
     ball_reset(ball);
+    return RIGHT_PLAYER_SCORE;
   }
   if (edge_right + ball->vel.x_vel > SCREEN_WIDTH)
   {
-    printf("Left Player Scored!\n");
     ball_reset(ball);
+    return LEFT_PLAYER_SCORE;
   }
   if (edge_top + ball->vel.y_vel < 0)
   {
@@ -54,6 +54,8 @@ void ball_update_position(Ball *ball)
   /* Updating the ball position */
   ball->rect.x += ball->vel.x_vel;
   ball->rect.y += ball->vel.y_vel;
+
+  return NO_SCORE;
 }
 
 void ball_reset(Ball *ball)
