@@ -23,10 +23,15 @@ typedef struct{
   Velocity vel;  
 }Ball;
 
+typedef enum {
+  NO_SCORE,
+  LEFT_PLAYER_SCORE,
+  RIGHT_PLAYER_SCORE
+} PlayerScored;
 
 Ball ball_create();
 
-void ball_update_position(Ball *ball);
+PlayerScored ball_update_position(Ball *ball);
 void ball_reset(Ball *ball);
 int ball_render(Ball *ball, SDL_Renderer *renderer);
 

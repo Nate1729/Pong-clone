@@ -12,6 +12,7 @@
 #include "ball.h"
 #include "constants.h"
 #include "centerline.h"
+#include "scoreboard.h"
 #include "state.h"
 #include "types.h"
 
@@ -47,62 +48,6 @@ void init(SDL_Window **window, SDL_Renderer **renderer)
   }
 }
 
-void check_paddle_ball_collision(Ball *ball, Paddle *left_paddle, Paddle *right_paddle)
-{
-  if (ball_left_edge(ball) > paddle_right_edge(left_paddle)
-      && ball_left_edge(ball) + ball->vel.x_vel < paddle_right_edge(left_paddle))
-  {
-    if (ball_bottom_edge(ball) >= paddle_top_edge(left_paddle) &&
-        ball_top_edge(ball) <= paddle_bottom_edge(left_paddle))
-    {
-      ball->vel.x_vel = -ball->vel.x_vel;
-    }
-  } else if (
-      ball_right_edge(ball) < paddle_right_edge(right_paddle) &&
-      ball_right_edge(ball) + ball->vel.x_vel > paddle_left_edge(right_paddle))
-  {
-    if (ball_bottom_edge(ball) >= paddle_top_edge(right_paddle) &&
-        ball_top_edge(ball) <= paddle_bottom_edge(right_paddle))
-    {
-      ball->vel.x_vel = -ball->vel.x_vel;
-    }    
-  }
-}
-
-SDL_Texture** initialize_font_surfaces(int max_score, TTF_Font *font, SDL_Renderer *renderer)
-{
-  if (max_score < 1)
-  {
-    return NULL;
-  }
-
-  /* Initalizing array */
-  SDL_Color number_color = {0xFF, 0xFF, 0xFF};
-  SDL_Texture **texture_array = (SDL_Texture **) malloc(sizeof(SDL_Texture *) * max_score);
-  
-  int i;
-  SDL_Surface *temp_surface;
-  for (i=0; i< max_score; i++)
-  {
-    temp_surface = TTF_RenderText_Solid(font, (char)(i+48), number_color);
-    texture_array[i] = SDL_CreateTextureFromSurface(renderer, temp_surface);
-
-    free(temp_surface);
-    temp_surface = NULL;
-
-    if (texture_array[i] == NULL)
-    {
-      free(texture_array);
-
-      printf("Error creating textures! SDL Error: %s\n", SDL_GetError());
-
-      return NULL;
-    }
-  }
-
-  return texture_array;
-}
-
 int main()
 {  
   SDL_Window *window = NULL;
@@ -113,17 +58,25 @@ int main()
 
   /* Setting up TTF */
   TTF_Init();
-  TTF_Font *font = TTF_OpenFont("fonts/8-bit-font.ttf", 30);
+  TTF_Font *font = TTF_OpenFont("fonts/8-bit-font.ttf", 50);
   if (font == NULL)
   {
     printf("Error opening font!\n");
     exit(EXIT_FAILURE);
   }
   SDL_Color color = { 255, 255, 255 };
-  SDL_Texture **scoreboard_texture_array = initialize_font_surfaces(10, font, renderer);
+ /* SDL_Surface *textSurface = TTF_RenderText_Solid(font, "0", color);
+  textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+  SDL_FreeSurface(textSurface); */
+
+  /* Creating Font Textures */
+  SDL_Texture **score_textures = malloc(sizeof(SDL_Texture*) * (MAX_SCORE+1));
+  fill_score_textures(score_textures, font, color, renderer);
 
   /* Initializing Game State */
   GameState state = game_state_initialize();
+  Scoreboard left_scoreboard = scoreboard_left_create();
+  Scoreboard right_scoreboard = scoreboard_right_create();
  
   /* Setting up frame rate */
   u64 frame_length = (1000 / (u64)FRAME_RATE);
@@ -180,16 +133,26 @@ int main()
       /* Update game object positions */
       paddle_move(&state.left_paddle);
       paddle_move(&state.right_paddle);
-      check_paddle_ball_collision(&state.ball, &state.left_paddle, &state.right_paddle);
-      ball_update_position(&state.ball);
-      /*SDL_RenderCopy(renderer, textTexture, NULL, NULL);*/
+      check_paddle_ball_collision(&state);
+      int scored = ball_update_position(&state.ball);
+      if (scored == LEFT_PLAYER_SCORE && state.left_scoreboard.score < MAX_SCORE)
+      {
+        state.left_scoreboard.score += 1;
+      }
+      else if (scored == RIGHT_PLAYER_SCORE && state.right_scoreboard.score < MAX_SCORE)
+      {
+        state.right_scoreboard.score += 1;
+      }
 
-      game_state_render(&state, renderer);;
+      game_state_render(&state, renderer);
+      scoreboard_render(&left_scoreboard, renderer, score_textures[state.left_scoreboard.score]);
+      scoreboard_render(&right_scoreboard, renderer, score_textures[state.right_scoreboard.score]);
       SDL_RenderPresent(renderer);
     }
   }
   
   game_state_destroy(&state);
+  destroy_score_textures(score_textures);
 
   TTF_CloseFont(font);
   SDL_DestroyTexture(textTexture);
